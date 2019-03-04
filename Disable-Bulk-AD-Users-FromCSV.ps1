@@ -10,11 +10,11 @@ $BackupDir = "E:\UserHomeDrive_Backup\$($User.SamAccountName)_H-Drive_Termed_$($
 Set-ADUser $User.SamAccountName -Description "Disabled by IT on $TermDate" -Enabled $false -Add @{extensionAttribute10="$TermDate"}
 Move-ADObject $CurrentUser.distinguishedName -TargetPath "OU=Disabled,OU=Users,DC=Company,DC=com"
 
-IF ( $(Try { Test-Path $CurrentUser.HomeDirectory } Catch { $false }) ) {
+IF ( $CurrentUser.HomeDirectory -ne $null ) {
    [io.compression.zipfile]::CreateFromDirectory($CurrentUser.HomeDirectory, $BackupDir)
  }
 ELSE {
-exit
+Continue
 }
 
 IF (Test-Path $BackupDir) {
